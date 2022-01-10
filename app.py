@@ -1,12 +1,14 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from orderedList import *
 
 app = Flask(__name__)
 data = OrderedList()
-
+search = "all"
 
 @app.route("/")
+@app.route("/home")
 def home_page():
+    
     return render_template("home.html")
 
 @app.route("/input")
@@ -21,9 +23,10 @@ def edit():
 def delete():
     return "delete"
 
-@app.route("/view/<id>/<name>")
-def view(id, name):
-    return "viewing id, name"
+@app.route("/view")
+def view():
+    search = request.args.get('search')
+    return render_template("view.html")
 
 @app.route("/challenge")
 def challenge():

@@ -1,4 +1,5 @@
 ## OrderedList ADT for Item (refer to Item in item.py)
+## Items are lists [itemID, itemName, itemAmount, itemCost, itemDescription] [Int, String, Int, Int, String]
 
 class OrderedList():
     
@@ -8,17 +9,16 @@ class OrderedList():
         self.freeID = []
         self.countID = 0
     
-    ## add(itemName, itemQuantity, itemPrice, itemDescription) this function adds items and assigns an ID to the item and returns the ID
-    ## String Int Float String -> Int
-    def add(self, itemName, itemQuantity, itemPrice, itemDescription):
+    ## add(item) this function adds items without their IDs and assigns an ID to the item and returns the ID
+    ## [] -> Int
+    def add(self, item):
         tempID = self.countID
         if self.freeID.len() != 0:
             self.freeID.sort()
             tempID = freeID.pop(0)
         else:
-            tempID = self.countID
             self.countID += 1
-        self.orderedList.append([tempID, itemName, itemQuantity, itemPrice, itemDescription])
+        self.orderedList.append(item.insert(tempID ,0))
         return tempID
         
     ## searchByID(itemID) this function searches item by ID and returns it
@@ -28,12 +28,13 @@ class OrderedList():
             if i[0] == itemID:
                 return i
 
-    ## searchByName(itemName) this function searches item by name and returns a list of matching items
+    ## searchByName(itemName) this function searches item by name and returns a list of matching items that
+    ##                          contains a substring of the name
     ## String -> []
     def searchByName(self, itemName):
         itemList = []
         for i in self.orderedList:
-            if i[1] == itemName:
+            if itemName in i[1]:
                 itemList.append(i)
         return itemList
 
@@ -45,11 +46,11 @@ class OrderedList():
         self.freeID.append(tempItem[0])
         self.orderedList.remove(self.searchByID(itemID))
             
-    ## removeByName(itemName) this function removes all items of specified name
+    ## removeByName(itemName) this function removes all items of exact specified name
     ## Int -> None
     def removeByName(self, itemName):
         for i in self.orderedList:
-            if i[1] == itemName:
+            if itemName == i[1]:
                 self.orderedList.remove(i)
     
     ## isEmpty() this function checks if orderedList is empty
