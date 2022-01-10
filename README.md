@@ -5,4 +5,8 @@ Notes:
 Using flask framework to create a python webapp
 
 
-run: FLASK_APP=app.py flask run
+Manual:
+download *.py files 
+install flask and python
+run: 
+FLASK_APP=app.py flask run
