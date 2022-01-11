@@ -10,7 +10,12 @@ Manual:
 download *.py files
 
 2.)
-install flask and python
+install python (developed in python 2.7 but should work in python 3 although some updated modules may be needed)
+pip install flask
+pip install flask-sqlalchemy
+
+## Note: make sure flask script is reachable by python
+
 
 3.)
 run development server:

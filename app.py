@@ -1,9 +1,16 @@
 from flask import Flask, render_template, request
+from flask_sqlalchemy import SQLAlchemy
+
+from config import Config
 from orderedList import *
 
 app = Flask(__name__)
+app.config.from_object(Config)
+db = SQLAlchemy(app)
 data = OrderedList()
-search = "all"
+search = ""
+
+
 
 @app.route("/")
 @app.route("/home")
