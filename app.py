@@ -10,6 +10,9 @@ db = SQLAlchemy(app)
 data = OrderedList()
 search = ""
 
+
+## Routes
+
 @app.route("/")
 @app.route("/home")
 def home_page():
