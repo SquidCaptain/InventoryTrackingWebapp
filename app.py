@@ -1,23 +1,24 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from models import Item
 
 from config import Config
-from orderedList import *
+#from orderedList import *
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
-data = OrderedList()
+##data = OrderedList()
 search = ""
-
+items = Item.query.all()
 
 ## Routes
 
 @app.route("/")
 @app.route("/home")
 def home_page():
-    
-    return render_template("home.html")
+    items = Item.query.all()
+    return render_template("home.html", items=items)
 
 @app.route("/input")
 def input():
