@@ -7,20 +7,18 @@ from models import Item
 ## --Globals--
 items = Item.query.all()
 
-## searching() this function returns items with names matching the search
+## searching() this function returns items with names matching the search otherwise returns all items
 def searching():
     search = str(request.args.get('search')).strip()
     result = Item.query.filter_by(Item.name.contains(search))
-    if len(items.all()) == 0:
+    if search=="" or len(items.all()) == 0:
         result = Item.query.all()
     return result
 
-## searching() this function returns items with ID matching specified ID
+## searching() this function returns the item with ID matching specified ID
 def searchID():
-    search = str(request.args.get('search')).strip()
-    result = Item.query.filter_by(id==search)
-    if len(items.all()) == 0:
-        result = Item.query.all()
+    search = editID ##str(request.args.get('searchID')).strip()
+    result = Item.query.filter_by(id==search).first()
     return result
 @app.route("/")
 @app.route("/home")
@@ -37,10 +35,23 @@ def home_page():
 
 @app.route("/add")
 def input():
-    return render_template("add.html", items=items)
+    message = "Add a new item!"
+    name = str(request.args.get('name')).strip()
+    price = float(request.args.get('price'))
+    inventory = int(request.args.get('inventory'))
+    description = str(request.args.get('description')).strip()
+    if name and price>=0.0 and inventory>=0:
+        item = Item(name=name, inventory=inventory, price=price, description=description)
+        db.session.add(item)
+        db.session.commit()
+
+    return render_template("add.html", message=message ,name=name)
 
 @app.route("/remove")
 def delete():
+    message = "Warning: input will be floored and item will be permanantly deleted"
+    Item.query.filter_by(id_num=int(request.args.get('inventory'))).delete()
+    db.session.commit()
     return render_template("remove.html", items=items)
 
 @app.route("/search")
@@ -50,9 +61,20 @@ def view():
 
 @app.route("/edit/<editID>")
 def edit(editID):
-    searchResult=searchID()
+    searchResult=searchID(editID)
+    message = "Welcome"
+    if searchResult == None:
+        message = "Invalid ID"
+        searchResult = []
+    else:
+
+
     
-    return render_template("edit.html", items=items)
+    return render_template("edit.html", message=message, item=searchResult)
+
+@app.route("/edit/verify/<valid>")
+def verify(valid):
+
 
 @app.route("/challenge")
 def challenge():
