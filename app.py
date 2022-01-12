@@ -11,3 +11,4 @@ app.config.from_object(Config)
 ## --Database--
 db = SQLAlchemy(app)
 db.create_all()
+db.session.commit()
