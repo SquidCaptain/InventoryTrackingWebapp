@@ -38,23 +38,33 @@ def home_page():
 
 @app.route("/add", methods=['POST', 'GET'])
 def item_create():
+    message = "Input"
     form = AddForm()
 
     if request.method == 'POST':
-        name = request.form.get('name')
+        name = request.form.get('name').strip()
         inventory = request.form.get('inventory')
         price = request.form.get('price')
-        description = request.form.get('description')
+        description = request.form.get('description').strip()
+        if name:
+            ##check if other args defaults
+            if str(inventory) == "":
+                inventory = 0
+            if str(price) == "":
+                price = 0 
+            try:
+                item = Item(name=name, inventory=inventory, price=price, description=description)
+                db.session.add(item)
+                db.session.commit()
+                message = "Success"
+            except:
+                print("Bad things happend")
+        else:
+            message = "Invalid Input"
+            
 
-        try:
-            item = Item(name=name, inventory=inventory, price=price, description=description)
-            db.session.add(item)
-            db.session.commit()
-        except:
-            print("Bad things happend")
 
-
-    return render_template('add.html', form=form)
+    return render_template('add.html', form=form, message=message)
 
 @app.route("/remove", methods=['POST', 'GET'])
 def delete():
@@ -63,10 +73,10 @@ def delete():
     message = ""
     if request.method == 'POST':
         id_num = request.form.get("id_num")
-        print(id_num)
         try:
             Item.query.filter_by(id_num=int(id_num)).delete()
             db.session.commit()
+            items = Item.query.all()
         except:
             print("Bad things happend")
             message = "bad input"
@@ -79,18 +89,26 @@ def view():
 
 @app.route("/edit/<editID>")
 def edit(editID):
-    '''searchResult=searchID(editID)
-    message = "Welcome"
-    if searchResult == None:
-        message = "Invalid ID"
-        searchResult = []
-    else:
-        message = "Edit here"'''
-    return render_template("edit.html")
+    message=""
+    form = AddForm()
 
-@app.route("/edit/verify/<valid>")
-def verify(valid):
-    return "valid"
+    if request.method == 'POST':
+        name = request.form.get('name').strip()
+        inventory = request.form.get('inventory')
+        price = request.form.get('price')
+        description = request.form.get('description').strip()
+
+
+        try:
+            item = Item(name=name, inventory=inventory, price=price, description=description)
+            db.session.add(item)
+            db.session.commit()
+        except:
+            print("Bad things happend")
+
+
+
+    return render_template("edit.html", form=form, message=message)
 
 @app.route("/challenge")
 def challenge():

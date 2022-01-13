@@ -15,4 +15,4 @@ class Item(db.Model):
         super().__init__(*args, **kwargs)
 
     def __repr__(self):
-        return f'<Item id: {self.id_num}, name: {self.name}, inventory: {self.inventory}, price: {self.price}, description: {self.description}>'
+        return f'<Item id: {self.id_num}, name: {self.name}, inventory: {self.inventory}, price: ${self.price}, description: {self.description}>'
