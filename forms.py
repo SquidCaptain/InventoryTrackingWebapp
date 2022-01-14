@@ -1,12 +1,12 @@
 from wtforms import Form, StringField, TextAreaField, IntegerField, DecimalField
 
-class AddForm(Form):
+class MyForm(Form):
     name = StringField("name")
     inventory = IntegerField("inventory")
     price = DecimalField("price")
     description = TextAreaField("description")
 
-class DelForm(Form):
+class IDForm(Form):
     id_num = IntegerField("id_num")
 
 class SearchForm(Form):

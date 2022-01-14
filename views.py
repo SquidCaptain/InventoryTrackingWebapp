@@ -2,30 +2,18 @@ from flask import Flask, render_template, request, redirect, url_for
 
 from app import app, db
 from models import Item
-from forms import AddForm, DelForm, SearchForm
+from forms import MyForm, IDForm, SearchForm
 
 
 ## --Globals--
 items = Item.query.all()
 
-## searching() this function returns items with names matching the search otherwise returns all items
-def searching():
-    search = str(request.args.get('search')).strip()
-    result = Item.query.filter(Item.name.contains(search))
-    if search=="" or len(items) == 0:
-        result = Item.query.all()
-    return result
-
-## searching() this function returns the item with ID matching specified ID
-def searchID():
-    search = editID ##str(request.args.get('searchID')).strip()
-    result = Item.query.filter_by(id==search).first()
-    return result
-
-## Routes
-@app.route("/")
-@app.route("/home")
+## --Routes--
+## Home page
+@app.route("/", methods=['POST', 'GET'])
+@app.route("/home", methods=['POST', 'GET'])
 def home_page():
+    form = IDForm()
     #Item.query.filter_by(id_num=2).delete()
     #Item.query.filter_by(id_num=4).delete()
     #Item.query.filter_by(id_num=5).delete()
@@ -33,18 +21,26 @@ def home_page():
     #item = Item(name='Fat cat', inventory=1, price=9.0, description='Has enough food')
     #db.session.add(item)
     #db.session.commit()
+    if request.method == 'POST':
+        editID = request.values.get('id_num')
+        print("teehee " + editID)
+        try:
+            return redirect(url_for('edit', editID=editID))
+        except:
+            print("Something went wrong")
     items = Item.query.all()
-    return render_template("home.html", items=items)
+    return render_template("home.html", items=items, form=form)
 
+## For adding an item to the database
 @app.route("/add", methods=['POST', 'GET'])
 def item_create():
     message = "Input"
-    form = AddForm()
+    form = MyForm()
 
     if request.method == 'POST':
         name = request.form.get('name').strip()
-        inventory = request.form.get('inventory')
-        price = request.form.get('price')
+        inventory = int(request.form.get('inventory'))
+        price = float(request.form.get('price'))
         description = request.form.get('description').strip()
         if name:
             ##check if other args defaults
@@ -52,6 +48,7 @@ def item_create():
                 inventory = 0
             if str(price) == "":
                 price = 0 
+
             try:
                 if price >= 0 and inventory >= 0:
                     item = Item(name=name, inventory=inventory, price=price, description=description)
@@ -61,8 +58,9 @@ def item_create():
                 else:
                     message = "Non-negative numbers only >:("
             except:
-                message = "Bad Input"
-        message = "Bad Input"
+                message = "Bad Input 1"
+        else:
+            message = "Bad Input 2"
     else:
         message = "Input"
             
@@ -70,9 +68,10 @@ def item_create():
 
     return render_template('add.html', form=form, message=message)
 
+## For removing an item from the database
 @app.route("/remove", methods=['POST', 'GET'])
 def delete():
-    form = DelForm()
+    form = IDForm()
     items = Item.query.all()
     message = ""
     if request.method == 'POST':
@@ -86,40 +85,64 @@ def delete():
             message = "bad input"
     return render_template("remove.html", form=form, message=message, items=items)
 
-@app.route("/search")
+## For searching items and viewing all items
+@app.route("/search", methods=['POST', 'GET'])
 def view():
     message = ""
     form = SearchForm()
-
+    items = Item.query.all()
     if request.method == 'POST':
         search = request.form.get('search').strip()
+        if str(search):
+            items = Item.query.filter(Item.name.contains(search)).all()
+            if search=="" or len(items) == 0:
+                items = Item.query.all()
 
-    searchResult = searching()
-    return render_template("search.html", items=searchResult)
+    return render_template("search.html", items=items, form=form)
 
-@app.route("/edit/<editID>")
+## For editing certain items in the database
+@app.route("/edit/<int:editID>", methods=['POST', 'GET'])
 def edit(editID):
     message = ""
-    form = AddForm()
+    form = MyForm()
+    if editID == "":
+        message = "Invalid page, please go back and enter a value"
+        return render_template("edit.html", form=form, message=message, editID=editID)
+
+    item = Item.query.filter_by(id_num=editID).first()
+    if not item:
+        message = "So empty :o, seems like there isn't an item with ID: " + str(editID)
+        return render_template("edit.html", form=form, message=message, editID=editID)
+
+    form.name.data = item.name
+    form.inventory.data = item.inventory
+    form.price.data = item.price
+    form.description.data = item.description
 
     if request.method == 'POST':
         name = request.form.get('name').strip()
-        inventory = request.form.get('inventory')
-        price = request.form.get('price')
+        inventory = int(request.form.get('inventory'))
+        price = float(request.form.get('price'))
         description = request.form.get('description').strip()
         if str(name) == "":
-            price = ""
+            name = item.name
         if str(inventory) == "":
-            inventory = 0
+            inventory = int(item.inventory)
         if str(price) == "":
-            price = 0
+            price = float(item.price)
         if str(description) == "":
-            price = ""
+            description = item.description
         try:
-            if price >= 0 and inventory >= 0:
-                item = Item(name=name, inventory=inventory, price=price, description=description)
-                db.session.add(item)
+            if price >= 0.0 and inventory >= 0:
+                item.name = name
+                item.inventory = inventory
+                item.price = price
+                item.description = description
                 db.session.commit()
+                form.name.data = item.name
+                form.inventory.data = item.inventory
+                form.price.data = item.price
+                form.description.data = item.description
                 message = "Success"
             else:
                 message = "Non-negative numbers only >:("
@@ -127,9 +150,9 @@ def edit(editID):
             message = "Bad Input"
     else:
         message = "Input"
+    return render_template("edit.html", form=form, message=message, editID=editID, item=item)
 
-    return render_template("edit.html", form=form, message=message)
-
+## Challenge problem
 @app.route("/challenge")
 def challenge():
     return render_template("challenge.html", items=items)
