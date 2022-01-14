@@ -5,6 +5,7 @@
 <a href="{{ url_for('home_page') }}" class="btn btn-dark">Home</a>
 <a href="{{ url_for('delete') }}" class="btn btn-dark">Delete</a>
 <a href="{{ url_for('view') }}" class="btn btn-dark">Search</a>
+
 <form action="{{ url_for('item_create') }}" method="POST">
     <p><strong>Input information, note that items of the same name thats already in the database will count as seperate items.</strong></p>
     <p>{{ message }}</p>

@@ -8,3 +8,6 @@ class AddForm(Form):
 
 class DelForm(Form):
     id_num = IntegerField("id_num")
+
+class SearchForm(Form):
+    search = StringField("search")

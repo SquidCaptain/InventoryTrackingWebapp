@@ -7,11 +7,15 @@
 <a href="{{ url_for('delete') }}" class="btn btn-dark">Delete</a>
 
  <!-- The form -->
- <form class="form-inline my-2 my-lg-0" action="search" method="GET">
-   <input type="text" placeholder="Search name" name="search">
-   <button type="submit" class="btn btn-dark">Go</button>
-    {% if item  %}
-    {% for item in items %}
-      <li>{{item}}</li>
-    {% endfor %}
- </form> 
+ <form action="{{ url_for('view') }}" method="POST">
+  {% for field in form %}
+      <div class="form-group">
+          {{ field.label() }}
+          {{ field(class="form-control") }}
+      </div>
+  {% endfor %}
+  <button class="btn btn-dark">Submit</button>
+</form>
+{% for item in items %}
+<li>{{item}}</li>
+{% endfor %}

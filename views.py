@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 
 from app import app, db
 from models import Item
-from forms import AddForm, DelForm
+from forms import AddForm, DelForm, SearchForm
 
 
 ## --Globals--
@@ -53,14 +53,18 @@ def item_create():
             if str(price) == "":
                 price = 0 
             try:
-                item = Item(name=name, inventory=inventory, price=price, description=description)
-                db.session.add(item)
-                db.session.commit()
-                message = "Success"
+                if price >= 0 and inventory >= 0:
+                    item = Item(name=name, inventory=inventory, price=price, description=description)
+                    db.session.add(item)
+                    db.session.commit()
+                    message = "Success"
+                else:
+                    message = "Non-negative numbers only >:("
             except:
-                print("Bad things happend")
-        else:
-            message = "Invalid Input"
+                message = "Bad Input"
+        message = "Bad Input"
+    else:
+        message = "Input"
             
 
 
@@ -84,12 +88,18 @@ def delete():
 
 @app.route("/search")
 def view():
+    message = ""
+    form = SearchForm()
+
+    if request.method == 'POST':
+        search = request.form.get('search').strip()
+
     searchResult = searching()
     return render_template("search.html", items=searchResult)
 
 @app.route("/edit/<editID>")
 def edit(editID):
-    message=""
+    message = ""
     form = AddForm()
 
     if request.method == 'POST':
@@ -97,16 +107,26 @@ def edit(editID):
         inventory = request.form.get('inventory')
         price = request.form.get('price')
         description = request.form.get('description').strip()
-
-
+        if str(name) == "":
+            price = ""
+        if str(inventory) == "":
+            inventory = 0
+        if str(price) == "":
+            price = 0
+        if str(description) == "":
+            price = ""
         try:
-            item = Item(name=name, inventory=inventory, price=price, description=description)
-            db.session.add(item)
-            db.session.commit()
+            if price >= 0 and inventory >= 0:
+                item = Item(name=name, inventory=inventory, price=price, description=description)
+                db.session.add(item)
+                db.session.commit()
+                message = "Success"
+            else:
+                message = "Non-negative numbers only >:("
         except:
-            print("Bad things happend")
-
-
+            message = "Bad Input"
+    else:
+        message = "Input"
 
     return render_template("edit.html", form=form, message=message)
 
