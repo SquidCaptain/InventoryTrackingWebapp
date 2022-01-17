@@ -39,28 +39,25 @@ def item_create():
 
     if request.method == 'POST':
         name = request.form.get('name').strip()
-        inventory = int(request.form.get('inventory'))
-        price = float(request.form.get('price'))
+        inventory = request.form.get('inventory')
+        price = request.form.get('price')
         description = request.form.get('description').strip()
-        if name:
-            ##check if other args defaults
-            if str(inventory) == "":
-                inventory = 0
-            if str(price) == "":
-                price = 0 
+        ##check if other args defaults
+        if str(inventory) == "":
+            inventory = 0.0
+        if str(price) == "":
+            price = 0 
 
-            try:
-                if price >= 0 and inventory >= 0:
-                    item = Item(name=name, inventory=inventory, price=price, description=description)
-                    db.session.add(item)
-                    db.session.commit()
-                    message = "Success"
-                else:
-                    message = "Non-negative numbers only >:("
-            except:
-                message = "Bad Input 1"
-        else:
-            message = "Bad Input 2"
+        try:
+            if float(price) >= 0.0 and int(float(inventory)) >= 0:
+                item = Item(name=name, inventory=int(float(inventory)), price=(round(float(price), 2)), description=description)
+                db.session.add(item)
+                db.session.commit()
+                message = "Success"
+            else:
+                message = "Non-negative numbers only >:("
+        except:
+            message = "Bad Input 1"
     else:
         message = "Input"
             
@@ -121,8 +118,8 @@ def edit(editID):
 
     if request.method == 'POST':
         name = request.form.get('name').strip()
-        inventory = int(request.form.get('inventory'))
-        price = float(request.form.get('price'))
+        inventory = request.form.get('inventory')
+        price = request.form.get('price')
         description = request.form.get('description').strip()
         if str(name) == "":
             name = item.name
@@ -133,10 +130,10 @@ def edit(editID):
         if str(description) == "":
             description = item.description
         try:
-            if price >= 0.0 and inventory >= 0:
+            if float(price) >= 0.0 and int(float(inventory)) >= 0:
                 item.name = name
-                item.inventory = inventory
-                item.price = price
+                item.inventory = int(float(inventory))
+                item.price = round(float(price), 2)
                 item.description = description
                 db.session.commit()
                 form.name.data = item.name
