@@ -14,13 +14,6 @@ items = Item.query.all()
 @app.route("/home", methods=['POST', 'GET'])
 def home_page():
     form = IDForm()
-    #Item.query.filter_by(id_num=2).delete()
-    #Item.query.filter_by(id_num=4).delete()
-    #Item.query.filter_by(id_num=5).delete()
-    #Item.query.filter_by().delete()
-    #item = Item(name='Fat cat', inventory=1, price=9.0, description='Has enough food')
-    #db.session.add(item)
-    #db.session.commit()
     if request.method == 'POST':
         editID = request.values.get('id_num')
         print("teehee " + editID)
@@ -42,7 +35,7 @@ def item_create():
         inventory = request.form.get('inventory')
         price = request.form.get('price')
         description = request.form.get('description').strip()
-        ##check if other args defaults
+        ## defaults inventory and price to 0
         if str(inventory) == "":
             inventory = 0.0
         if str(price) == "":
@@ -53,13 +46,13 @@ def item_create():
                 item = Item(name=name, inventory=int(float(inventory)), price=(round(float(price), 2)), description=description)
                 db.session.add(item)
                 db.session.commit()
-                message = "Success"
+                message = "Success!"
             else:
                 message = "Non-negative numbers only >:("
         except:
-            message = "Bad Input 1"
+            message = "Something went wrong xO"
     else:
-        message = "Input"
+        message = "Input info"
             
 
 
@@ -127,8 +120,6 @@ def edit(editID):
             inventory = int(item.inventory)
         if str(price) == "":
             price = float(item.price)
-        if str(description) == "":
-            description = item.description
         try:
             if float(price) >= 0.0 and int(float(inventory)) >= 0:
                 item.name = name
@@ -140,16 +131,16 @@ def edit(editID):
                 form.inventory.data = item.inventory
                 form.price.data = item.price
                 form.description.data = item.description
-                message = "Success"
+                message = "Success!"
             else:
                 message = "Non-negative numbers only >:("
         except:
-            message = "Bad Input"
+            message = "Something went wrong xO"
     else:
-        message = "Input"
+        message = "Input new info"
     return render_template("edit.html", form=form, message=message, editID=editID, item=item)
 
 ## Challenge problem
-@app.route("/challenge")
+@app.route("/challenge", methods=['POST', 'GET'])
 def challenge():
     return render_template("challenge.html", items=items)
