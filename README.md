@@ -16,13 +16,10 @@ virtualenv --python=python3 venv
 source venv/bin/activate
 
 pip install flask
-pip install flask-sqlalchemy
-
-## Note: make sure flask script is reachable by python
-## Note: make sure 
+pip install flask-sqlalchemy flask-migrate
 
 3.)
-python -m flask run
+python main.py
 
 4.)
 go to localhost http://127.0.0.1:5000/
@@ -31,10 +28,14 @@ Todo:
 X   Making database for info
 x   Basic functionality
     Making in depth searching function
-    Finish form
-        Allow add
-        Allow remove
+X   Finish form
+X       Allow add
+X       Allow remove
 X       Allow search
-        Allow edit
+X       Allow edit
     Finish display (On hold)
+X   Finish database migration
     Finish challenge
+        Finish Shipment
+X       Setup database table
+        Finish finish logic

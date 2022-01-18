@@ -1,3 +1,4 @@
+from curses import is_term_resized
 from wtforms import Form, StringField, TextAreaField, IntegerField, DecimalField, validators
 from wtforms.validators import NumberRange
 
@@ -14,6 +15,12 @@ class MyForm(Form):
 class IDForm(Form):
     id_num = IntegerField("id_num", validators=[NumberRange(min=1)])
 
-## SearchForm() this is used to collect ID from the user so specific item can be found
+## SearchForm() this is used to collect input from the user so specific item can be found
 class SearchForm(Form):
     search = StringField("search")
+    
+## ShipmentForm() this is used to collect IDs and information for shipments
+class ShipmentForm(Form):
+    ship_id = IntegerField("id_num", validators=[NumberRange(min=1)])
+    item_id = IntegerField("id_num", validators=[NumberRange(min=1)])
+    item_num = IntegerField("id_num", validators=[NumberRange(min=1)])

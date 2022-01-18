@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 from config import Config
 #from orderedList import *
@@ -12,3 +13,6 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 db.create_all()
 db.session.commit()
+
+## --Database Migration--
+migrate = Migrate(app, db)

@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for
 
 from app import app, db
-from models import Item
+from models import Item, Shipment
 from forms import MyForm, IDForm, SearchForm
 
 
 ## --Globals--
-items = Item.query.all()
+##items = Item.query.all()
 
 ## --Routes--
 ## Home page
@@ -141,6 +141,18 @@ def edit(editID):
     return render_template("edit.html", form=form, message=message, editID=editID, item=item)
 
 ## Challenge problem
-@app.route("/challenge", methods=['POST', 'GET'])
-def challenge():
-    return render_template("challenge.html", items=items)
+@app.route("/shipment", methods=['POST', 'GET'])
+@app.route("/shipment/<queryID>", methods=['POST', 'GET'])
+def challenge(queryID):
+    message = ""
+    form = MyForm()
+    formSearch = IDForm()
+    items = Item.query.all()
+
+    if request.form['action'] == 'Add New':
+        print(1)
+    elif request.form['action'] == 'Search Item ID':
+        print(2)
+    elif request.form['action'] == 'Search Shipment ID':
+        print(3)
+    return render_template("shipment.html", formSearch=formSearch, form=form, message=message, queryID=queryID, items=items)
