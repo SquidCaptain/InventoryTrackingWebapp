@@ -19,8 +19,7 @@ class IDForm(Form):
 class SearchForm(Form):
     search = StringField("search")
     
-## ShipmentForm() this is used to collect IDs and information for shipments
+## ShipmentForm() this is used to specify inventory for shipment
 class ShipmentForm(Form):
-    ship_id = IntegerField("id_num", validators=[NumberRange(min=1)])
     item_id = IntegerField("id_num", validators=[NumberRange(min=1)])
-    item_num = IntegerField("id_num", validators=[NumberRange(min=1)])
+    inventory = IntegerField("inventory", validators=[NumberRange(min=0)])

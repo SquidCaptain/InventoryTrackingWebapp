@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 
 from app import app, db
-from models import Item, Shipment
-from forms import MyForm, IDForm, SearchForm
+from models import Item, Shipment, ItemShip
+from forms import MyForm, IDForm, SearchForm, ShipmentForm
 
 
 ## --Globals--
@@ -140,19 +140,48 @@ def edit(editID):
         message = "Input new info"
     return render_template("edit.html", form=form, message=message, editID=editID, item=item)
 
-## Challenge problem
+## Shipment pages
 @app.route("/shipment", methods=['POST', 'GET'])
-@app.route("/shipment/<queryID>", methods=['POST', 'GET'])
-def challenge(queryID):
-    message = ""
-    form = MyForm()
-    formSearch = IDForm()
-    items = Item.query.all()
+def shipment():
+    message = "Input shipment or leave blank for new shipment"
+    form = IDForm()
+    current_url = url_for('shipment')
+    back_url = url_for('home_page')
+    items = ItemShip.query.all()
+    if request.method == 'POST':
+        shipID = request.form.get("id_num")
+        if shipID:
+            if ItemShip.query.filter_by(ship_id=shipID).all():
+                return redirect(url_for('ship_id', shipID=int(shipID)))
+            else:
+                message = "Input shipment or leave blank for new shipment \n BAD INPUT"
+        else:
+            ship = Shipment()
+            db.session.add(ship)
+            db.session.commit()
+            return redirect(url_for('ship_id', shipID=ship.id_num))
 
-    if request.form['action'] == 'Add New':
-        print(1)
-    elif request.form['action'] == 'Search Item ID':
-        print(2)
-    elif request.form['action'] == 'Search Shipment ID':
-        print(3)
-    return render_template("shipment.html", formSearch=formSearch, form=form, message=message, queryID=queryID, items=items)
+    return render_template("shipments.html", current_url=current_url, back_url=back_url, form=form, message=message, items=items)
+
+## Find shipment by ID and add items
+@app.route("/shipment/<int:shipID>", methods=['POST', 'GET'])
+def ship_id(shipID):
+    current_url = url_for('ship_id', shipID=shipID)
+    back_url = url_for('shipment')
+    message = ""
+    form = ShipmentForm()
+    items = Item.query.join(ItemShip).join(Shipment).filter(ItemShip.ship_id == Shipment.id_num).all()
+    if request.method == 'POST':
+        itemID = request.form.get("itemID")
+        inventory = request.form.get("inventory")
+        if inventory == "":
+            inventory = 0
+        if itemID:
+            item_in_ship = Item.query.join(ItemShip).join(Shipment).filter((ItemShip.item_id == Item.id_num) and (ItemShip.ship_id == Shipment.id_num)).all()
+            if item_in_ship:
+                if inventory == 0:
+                    print(item_in_ship[0].delete())
+                else:
+                    Item.ships.append()
+                    
+    return render_template("shipments.html", current_url=current_url, back_url=back_url, form=form, message=message, items=items)
