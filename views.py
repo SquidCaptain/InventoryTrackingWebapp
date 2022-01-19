@@ -147,14 +147,16 @@ def shipment():
     form = IDForm()
     current_url = url_for('shipment')
     back_url = url_for('home_page')
-    items = ItemShip.query.all()
+    items = Shipment.query.all()
+    if items is None:
+        items = []
     if request.method == 'POST':
         shipID = request.form.get("id_num")
         if shipID:
-            if ItemShip.query.filter_by(ship_id=shipID).all():
+            if Shipment.query.filter_by(id_num=shipID).first() is not None:
                 return redirect(url_for('ship_id', shipID=int(shipID)))
             else:
-                message = "Input shipment or leave blank for new shipment \n BAD INPUT"
+                message = "Input shipment or leave blank for new shipment \n Your shipment doesn't seem to exist"
         else:
             ship = Shipment()
             db.session.add(ship)
@@ -168,20 +170,36 @@ def shipment():
 def ship_id(shipID):
     current_url = url_for('ship_id', shipID=shipID)
     back_url = url_for('shipment')
-    message = ""
+    message = "Add or edit items. \n If inventory is left empty or is 0, item is deleted from shipment"
     form = ShipmentForm()
-    items = Item.query.join(ItemShip).join(Shipment).filter(ItemShip.ship_id == Shipment.id_num).all()
+    items = ItemShip.query.filter_by(ship_id=shipID).first()
+    if items is None:
+        items = []
     if request.method == 'POST':
-        itemID = request.form.get("itemID")
+        itemID = request.form.get("item_id")
         inventory = request.form.get("inventory")
-        if inventory == "":
-            inventory = 0
-        if itemID:
-            item_in_ship = Item.query.join(ItemShip).join(Shipment).filter((ItemShip.item_id == Item.id_num) and (ItemShip.ship_id == Shipment.id_num)).all()
-            if item_in_ship:
+        item = Item.query.get(itemID)
+        if item is not None:
+            item_in_ship = ItemShip.query.filter_by(ship_id=shipID).filter_by(item_id=itemID).first()
+            if item_in_ship is not None:
                 if inventory == 0:
-                    print(item_in_ship[0].delete())
+                    item_in_ship.delete()
+                    db.session.commit()
                 else:
-                    Item.ships.append()
-                    
+                    item_in_ship.inventory = inventory
+                    db.session.commit()
+                    form.item_id.data = itemID
+                    form.inventory.data = inventory
+                    message += '\n'+"Successfully edited item in shipment"
+            else:
+                item.shipment.append(ItemShip(item_id=itemID, ship_id=shipID, inventory=inventory))
+                db.session.commit()
+                form.item_id.data = itemID
+                form.inventory.data = inventory
+                message += '\n'+"Successfully added item to shipment"
+        else:
+            message += '\n'+"Item does not exist >:("
+    
+    items = ItemShip.query.filter_by(ship_id=shipID).all()
+                         
     return render_template("shipments.html", current_url=current_url, back_url=back_url, form=form, message=message, items=items)

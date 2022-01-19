@@ -21,5 +21,5 @@ class SearchForm(Form):
     
 ## ShipmentForm() this is used to specify inventory for shipment
 class ShipmentForm(Form):
-    item_id = IntegerField("id_num", validators=[NumberRange(min=1)])
+    item_id = IntegerField("item_id", validators=[NumberRange(min=1)])
     inventory = IntegerField("inventory", validators=[NumberRange(min=0)])

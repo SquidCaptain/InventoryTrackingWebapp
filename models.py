@@ -16,6 +16,9 @@ class ItemShip(db.Model):
     inventory = db.Column('inventory', db.Integer)
     item = db.relationship("Item", back_populates="shipment")
     shipment = db.relationship("Shipment", back_populates="item")
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 # Item model for database
 # primary key: id_num
