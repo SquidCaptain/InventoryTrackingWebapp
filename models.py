@@ -20,6 +20,10 @@ class ItemShip(db.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def __repr__(self):
+        return f'< Item ID: { self.item_id }, Inventory Shipped: { self.inventory } >'
+
+
 # Item model for database
 # primary key: id_num
 class Item(db.Model):
