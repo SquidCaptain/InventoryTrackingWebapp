@@ -17,7 +17,7 @@ source venv/bin/activate
 
 pip install flask
 pip install flask-sqlalchemy flask-migrate
-## Install Tkinter
+# Install Tkinter
 sudo apt-get install python3-tk
 
 3.)
@@ -37,7 +37,7 @@ X       Allow search
 X       Allow edit
     Finish display (On hold)
 X   Finish database migration
-    Finish challenge
-        Finish Shipment
+X   Finish challenge
+X       Finish Shipment
 X       Setup database table
-        Finish finish logic
+X       Finish logic
