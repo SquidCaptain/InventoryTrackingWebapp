@@ -3,16 +3,35 @@ from flask import Flask, render_template, request, redirect, url_for
 from app import app, db
 from models import Item, Shipment, ItemShip
 from forms import MyForm, IDForm, SearchForm, ShipmentForm
+from datetime import datetime, timedelta
+import requests, json
 
 
 ## --Globals--
 ##items = Item.query.all()
+cities = ['London', 'Vancouver', 'Toronto', 'Tokyo', 'Chicago']
+url = "http://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_key}"
+weather_key = "185dac1d7c90cd6aba0849cae0e0fcc3"
+weather = ["", "", "", "", ""]
+last_weather_update = None
 
 ## --Routes--
 ## Home page
 @app.route("/", methods=['POST', 'GET'])
 @app.route("/home", methods=['POST', 'GET'])
 def home_page():
+    
+    ##Weather updater
+    global last_weather_update, cities, url, weather_key, weather
+    if last_weather_update is None or last_weather_update + timedelta(hours = 1) > datetime.now():
+        last_weather_update = datetime.now()
+        updated_weather = []
+        for i in cities:
+            req = requests.get(url.format(city=i, weather_key=weather_key)).json()['weather'][0]['description']
+            updated_weather.append(req)
+            print(req)
+            
+    
     form = IDForm()
     if request.method == 'POST':
         editID = request.values.get('id_num')

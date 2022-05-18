@@ -18,6 +18,7 @@ source venv/bin/activate
 pip install flask
 pip install flask-sqlalchemy flask-migrate
 pip install wtforms
+pip install requests
 # Install Tkinter
 sudo apt-get install python3-tk
 

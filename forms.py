@@ -1,5 +1,5 @@
 from curses import is_term_resized
-from wtforms import Form, StringField, TextAreaField, IntegerField, DecimalField, validators
+from wtforms import Form, StringField, TextAreaField, IntegerField, DecimalField, SelectField, validators
 from wtforms.validators import NumberRange
 
 ## These are Form objects from wtforms used to implement forms in webapp
@@ -9,6 +9,7 @@ class MyForm(Form):
     name = StringField("name")
     inventory = IntegerField("inventory", validators=[NumberRange(min=0)])
     price = DecimalField("price", validators=[NumberRange(min=0)])
+    location = SelectField("location", choices=[('1', 'London'), ('2', 'Vancouver'), ('3', 'Toronto'), ('4', 'Tokyo'), ('5', 'Chicago')])
     description = TextAreaField("description")
 
 ## IDForm() this is used to collect ID from the user so specific item can be found
