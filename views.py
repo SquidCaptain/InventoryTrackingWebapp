@@ -29,7 +29,6 @@ def home_page():
         for i in cities:
             req = requests.get(url.format(city=i, weather_key=weather_key)).json()['weather'][0]['description']
             updated_weather.append(req)
-            print(req)
             
     
     form = IDForm()

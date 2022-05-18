@@ -57,9 +57,8 @@ class Item(db.Model):
             last_weather_update = datetime.now()
             updated_weather = []
             for i in cities:
-                req = requests.get(url.format(city=i, weather_key=weather_key)).json()['weather']['0']['description']
+                req = requests.get(url.format(city=i, weather_key=weather_key)).json()['weather'][0]['description']
                 updated_weather.append(req)
-                print(req)
         
         loc_weather = weather[0]
         for i in range(len(cities)):
