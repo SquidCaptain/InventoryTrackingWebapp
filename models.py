@@ -1,16 +1,10 @@
 from datetime import datetime
 from turtle import back
+from weather import get_weather, get_cities
 
 from app import db
 
 import requests, json
-
-# --Globals--
-cities = ['London', 'Vancouver', 'Toronto', 'Tokyo', 'Chicago']
-url = "http://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_key}"
-weather_key = "185dac1d7c90cd6aba0849cae0e0fcc3"
-weather = ["", "", "", "", ""]
-last_weather_update = None
 
 # Models for SQLAlchemy to create and manage database
 
@@ -41,7 +35,7 @@ class Item(db.Model):
     name = db.Column(db.String(140))
     inventory = db.Column(db.Integer)
     price = db.Column(db.Float)
-    location = db.Column(db.String(140))
+    location = db.Column(db.Integer)
     description = db.Column(db.Text)
     created = db.Column(db.DateTime, default=datetime.now())
     shipment = db.relationship('ItemShip', back_populates="item")
@@ -50,26 +44,20 @@ class Item(db.Model):
         super().__init__(*args, **kwargs)
 
     def __repr__(self):
-        
-        ##Weather updater
-        global last_weather_update, cities, url, weather_key, weather
-        if last_weather_update is None or last_weather_update + timedelta(hours = 1) > datetime.now():
-            last_weather_update = datetime.now()
-            updated_weather = []
-            for i in cities:
-                req = requests.get(url.format(city=i, weather_key=weather_key)).json()['weather'][0]['description']
-                updated_weather.append(req)
-        
+        weather = get_weather()
+        cities = get_cities()
         loc_weather = weather[0]
+        translated_loc = cities[self.location - 1]
+        
         for i in range(len(cities)):
-            if cities[i] == self.location:
+            if cities[i] == translated_loc:
                 loc_weather = weather[i]
                  
-        return f'< Item id: {self.id_num}, Name: {self.name}, Inventory: {self.inventory}, Price: ${self.price}, Location: ${self.location}: ${loc_weather}, Description: {self.description} >'
+        return f'< Item id: {self.id_num}, Name: {self.name}, Inventory: {self.inventory}, Price: ${self.price}, Location: {translated_loc}: {loc_weather}, Description: {self.description} >'
 
 # Shipment model for database
 # primary key: id_num
-# Note: Have not implemented Shipment source\destination\price since warehouse locations have not been implemented
+# Note: Have not implemented Shipment source\destination\price
 class Shipment(db.Model):
     __tabelname__= 'shipment'
     id_num = db.Column(db.Integer, primary_key=True)

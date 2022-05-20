@@ -3,33 +3,19 @@ from flask import Flask, render_template, request, redirect, url_for
 from app import app, db
 from models import Item, Shipment, ItemShip
 from forms import MyForm, IDForm, SearchForm, ShipmentForm
-from datetime import datetime, timedelta
-import requests, json
+from datetime import datetime
+import json
 
 
 ## --Globals--
 ##items = Item.query.all()
-cities = ['London', 'Vancouver', 'Toronto', 'Tokyo', 'Chicago']
-url = "http://api.openweathermap.org/data/2.5/weather?q={city}&appid={weather_key}"
-weather_key = "185dac1d7c90cd6aba0849cae0e0fcc3"
-weather = ["", "", "", "", ""]
-last_weather_update = None
+
 
 ## --Routes--
 ## Home page
 @app.route("/", methods=['POST', 'GET'])
 @app.route("/home", methods=['POST', 'GET'])
 def home_page():
-    
-    ##Weather updater
-    global last_weather_update, cities, url, weather_key, weather
-    if last_weather_update is None or last_weather_update + timedelta(hours = 1) > datetime.now():
-        last_weather_update = datetime.now()
-        updated_weather = []
-        for i in cities:
-            req = requests.get(url.format(city=i, weather_key=weather_key)).json()['weather'][0]['description']
-            updated_weather.append(req)
-            
     
     form = IDForm()
     if request.method == 'POST':
@@ -52,8 +38,10 @@ def item_create():
         name = request.form.get('name').strip()
         inventory = request.form.get('inventory')
         price = request.form.get('price')
+        location = request.form.get('location')
         description = request.form.get('description').strip()
         ## defaults inventory and price to 0
+        ## defaults location to London
         if str(inventory) == "":
             inventory = 0.0
         if str(price) == "":
@@ -61,7 +49,7 @@ def item_create():
 
         try:
             if float(price) >= 0.0 and int(float(inventory)) >= 0:
-                item = Item(name=name, inventory=int(float(inventory)), price=(round(float(price), 2)), description=description)
+                item = Item(name=name, inventory=int(float(inventory)), price=(round(float(price), 2)), location=location, description=description)
                 db.session.add(item)
                 db.session.commit()
                 message = "Success!"
@@ -125,12 +113,14 @@ def edit(editID):
     form.name.data = item.name
     form.inventory.data = item.inventory
     form.price.data = item.price
+    form.location.data = item.location
     form.description.data = item.description
 
     if request.method == 'POST':
         name = request.form.get('name').strip()
         inventory = request.form.get('inventory')
         price = request.form.get('price')
+        location = request.form.get('location')
         description = request.form.get('description').strip()
         if str(name) == "":
             name = item.name
@@ -148,6 +138,7 @@ def edit(editID):
                 form.name.data = item.name
                 form.inventory.data = item.inventory
                 form.price.data = item.price
+                form.location.data = item.location
                 form.description.data = item.description
                 message = "Success!"
             else:
