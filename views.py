@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from app import app, db
 from models import Item, Shipment, ItemShip
 from forms import MyForm, IDForm, SearchForm, ShipmentForm
+from weather import get_cities, get_weather
 from datetime import datetime
 import json
 
@@ -20,7 +21,6 @@ def home_page():
     form = IDForm()
     if request.method == 'POST':
         editID = request.values.get('id_num')
-        print("teehee " + editID)
         try:
             return redirect(url_for('edit', editID=editID))
         except:
@@ -100,12 +100,10 @@ def view():
 @app.route("/edit/<int:editID>", methods=['POST', 'GET'])
 def edit(editID):
     message = ""
-    form = MyForm()
-    if editID == "":
-        message = "Invalid page, please go back and enter a value"
-        return render_template("edit.html", form=[], message=message, editID=editID)
 
     item = Item.query.filter_by(id_num=editID).first()
+    form = MyForm(location=item.location)
+    
     if not item:
         message = "So empty :o, seems like there isn't an item with ID: " + str(editID)
         return render_template("edit.html", form=form, message=message, editID=editID)
@@ -113,7 +111,6 @@ def edit(editID):
     form.name.data = item.name
     form.inventory.data = item.inventory
     form.price.data = item.price
-    form.location.data = item.location
     form.description.data = item.description
 
     if request.method == 'POST':
@@ -121,6 +118,7 @@ def edit(editID):
         inventory = request.form.get('inventory')
         price = request.form.get('price')
         location = request.form.get('location')
+        print(item.location)
         description = request.form.get('description').strip()
         if str(name) == "":
             name = item.name
@@ -133,12 +131,13 @@ def edit(editID):
                 item.name = name
                 item.inventory = int(float(inventory))
                 item.price = round(float(price), 2)
+                item.location = location
                 item.description = description
                 db.session.commit()
                 form.name.data = item.name
                 form.inventory.data = item.inventory
                 form.price.data = item.price
-                form.location.data = item.location
+                form.location.data = location
                 form.description.data = item.description
                 message = "Success!"
             else:
