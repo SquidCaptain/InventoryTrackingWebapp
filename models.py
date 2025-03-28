@@ -2,7 +2,7 @@ from datetime import datetime
 from turtle import back
 from weather import get_weather, get_cities
 
-from app import db
+from app import db, app
 
 import requests, json
 
@@ -69,5 +69,5 @@ class Shipment(db.Model):
 
     def __repr__(self):
         return f'<Item id: {self.id_num} Transaction Date: {self.created}>'
-
-db.create_all()
+with app.app_context():
+    db.create_all()

@@ -1,4 +1,4 @@
-from curses import is_term_resized
+#from curses import is_term_resized
 from wtforms import Form, StringField, TextAreaField, IntegerField, DecimalField, SelectField, validators
 from wtforms.validators import NumberRange
 

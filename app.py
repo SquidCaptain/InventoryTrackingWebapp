@@ -11,8 +11,9 @@ app.config.from_object(Config)
 
 ## --Database--
 db = SQLAlchemy(app)
-db.create_all()
-db.session.commit()
+with app.app_context():
+    db.create_all()
+    db.session.commit()
 
 ## --Database Migration--
 migrate = Migrate(app, db)
