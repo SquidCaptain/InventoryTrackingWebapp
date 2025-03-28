@@ -11,7 +11,6 @@ import json
 ## --Globals--
 ##items = Item.query.all()
 
-
 ## --Routes--
 ## Home page
 @app.route("/", methods=['POST', 'GET'])
