@@ -17,9 +17,9 @@ download *.py files and allow read, write, execute
 sudo apt install virtualenv
 virtualenv --python=python3 venv
 source venv/bin/activate
-
-pip install flask flask-sqlalchemy flask-migrate wtforms requests psycopg2
 ```
+Install libraries in requirements.txt
+
 Install Tkinter
 ```
 sudo apt-get install python3-tk
