@@ -76,7 +76,7 @@ def delete():
             db.session.commit()
             items = Item.query.all()
         except:
-            print("Bad things happend")
+            print("Bad things happened")
             message = "bad input"
     return render_template("remove.html", form=form, message=message, items=items)
 

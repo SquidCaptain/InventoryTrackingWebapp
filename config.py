@@ -1,13 +1,9 @@
 from dotenv import load_dotenv
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__name__))
-
 ## Flask (and extensions) config class
 class Config:
     DEBUG = False
-
-    from sqlalchemy import create_engine
 
     # Load environment variables from .env
     load_dotenv()
