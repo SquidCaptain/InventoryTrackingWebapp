@@ -7,10 +7,12 @@ from config import Config
 ## --Flask App--
 app = Flask(__name__)
 app.config.from_object(Config)
-app.config['SQLALCHEMY_POOL_SIZE'] = 10
-app.config['SQLALCHEMY_MAX_OVERFLOW'] = 20
 
 ## --Database--
-db = SQLAlchemy(app)
-with app.app_context():
-    db.create_all()
+try:
+    db = SQLAlchemy(app)
+    with app.app_context():
+        db.create_all()
+        print("Database initialized successfully.")
+except Exception as e:
+    print(f"Database connection failed: {e}")
