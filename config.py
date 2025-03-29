@@ -16,6 +16,6 @@ class Config:
     DEBUG = False
 
     # Construct the SQLAlchemy connection string
-    #DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
-    SQLALCHEMY_DATABASE_URI = os.getenv("POSTGRES_URL")
+    DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
