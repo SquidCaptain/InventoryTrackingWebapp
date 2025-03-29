@@ -1,6 +1,5 @@
-from pathlib import Path
 from app import app
-import views
+from views import *
 
 if __name__ == '__main__':
     app.run()
