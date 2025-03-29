@@ -1,3 +1,4 @@
+from sqlalchemy.pool import NullPool
 from dotenv import load_dotenv
 import os
 
@@ -14,8 +15,7 @@ DBNAME = os.getenv("dbname")
 ## Flask (and extensions) config class
 class Config:
     DEBUG = False
-    SQLALCHEMY_POOL_SIZE = 5
-    SQLALCHEMY_MAX_OVERFLOW = 10
+    SQLALCHEMY_POOLCLASS = NullPool
 
     # Construct the SQLAlchemy connection string
     SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
