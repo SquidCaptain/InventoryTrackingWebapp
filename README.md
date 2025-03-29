@@ -4,7 +4,9 @@ This is an inventory tracking webapp
 Notes:
 Using flask framework to create a python webapp
 
-Manual:
+Test this: https://inventory-tracking-webapp.vercel.app/
+
+Manual(to run this locally):
 
 1.)
 install python and go to an empty folder
@@ -16,7 +18,7 @@ sudo apt install virtualenv
 virtualenv --python=python3 venv
 source venv/bin/activate
 
-pip install flask flask-sqlalchemy flask-migrate wtforms requests
+pip install flask flask-sqlalchemy flask-migrate wtforms requests psycopg2
 ```
 Install Tkinter
 ```

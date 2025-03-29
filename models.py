@@ -69,5 +69,5 @@ class Shipment(db.Model):
 
     def __repr__(self):
         return f'<Item id: {self.id_num} Transaction Date: {self.created}>'
-with app.app_context():
-    db.create_all()
+#with app.app_context():
+#    db.create_all()
