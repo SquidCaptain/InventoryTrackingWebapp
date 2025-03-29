@@ -17,5 +17,5 @@ class Config:
 
     # Construct the SQLAlchemy connection string
     DATABASE_URL = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:Pe0pVSqoPLk9NBQn@db.rppbyjhlvkfeltciqlen.supabase.co:5432/postgres?sslmode=require"
+    SQLALCHEMY_DATABASE_URI = DATABASE_URL
     SQLALCHEMY_TRACK_MODIFICATIONS = False
