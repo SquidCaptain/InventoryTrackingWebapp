@@ -6,7 +6,7 @@ class Config:
     DEBUG = False
 
     # Load environment variables from .env
-    load_dotenv()
+    #load_dotenv()
 
     # Fetch variables
     USER = os.getenv("user")
