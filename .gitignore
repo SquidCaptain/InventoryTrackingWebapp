@@ -3,6 +3,10 @@
 ./venv
 *.db
 
+# Extra Images/Favicons
+favicon_io.zip
+favicon.png
+
 # Keys
 .env
 
