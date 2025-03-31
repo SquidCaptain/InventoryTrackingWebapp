@@ -5,7 +5,6 @@ from models import Item, Shipment, ItemShip
 from forms import MyForm, IDForm, SearchForm, ShipmentForm
 from weather import get_cities, get_weather
 from datetime import datetime
-from config import Config
 import json
 
 
@@ -30,7 +29,7 @@ def home_page():
     try:
         items = Item.query.all()
     except Exception as e:
-        items = [f"Database connection failed: {e}", Config.POSTGRES_URL]
+        items = [f"Database connection failed: {e}"]
     
     return render_template("home.html", items=items, form=form)
 
