@@ -25,7 +25,7 @@ def home_page():
             return redirect(url_for('edit', editID=editID))
         except:
             print("Something went wrong")
-    items = [Config.POSTGRES_URL]#Item.query.all()
+    items = [Config.SQLALCHEMY_DATABASE_URI]#Item.query.all()
     return render_template("home.html", items=items, form=form)
 
 ## For adding an item to the database
