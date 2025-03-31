@@ -30,6 +30,7 @@ def home_page():
     try:
         with app.app_context():
             testQuery = Item.query.all()
+        items = ["success"]
     except Exception as e:
         items = [f"Database connection failed: {e}"]
     
