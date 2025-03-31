@@ -17,8 +17,6 @@ class Config:
     DEBUG = False
     SQLALCHEMY_POOLCLASS = NullPool
 
-    POSTGRES_URL = os.getenv("POSTGRES_URL")
-
     # Construct the SQLAlchemy connection string
     SQLALCHEMY_DATABASE_URI = f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
     SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -13,6 +13,7 @@ try:
     db = SQLAlchemy(app)
     with app.app_context():
         db.create_all()
+        db.session.commit()
         print("Database initialized successfully.")
 except Exception as e:
     print(f"Database connection failed: {e}")
