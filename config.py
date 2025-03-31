@@ -21,6 +21,7 @@ class Config:
     # Construct the SQLAlchemy connection string Ex: f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
     SQLALCHEMY_DATABASE_URI = f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # SQLALCHEMY_ENGINE_OPTIONS = {
-    #     'poolclass': NullPool
-    # }
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'poolclass': NullPool,
+        'pool_pre_ping': True
+    }
