@@ -25,8 +25,13 @@ def home_page():
             return redirect(url_for('edit', editID=editID))
         except:
             print("Something went wrong")
-    #testQuery = Item.query.all()
+    
     items = ["Here"]
+    with app.app_context():
+        testQuery = Item.query.all()
+    except Exception as e:
+        items = f"Database connection failed: {e}"
+    
     return render_template("home.html", items=items, form=form)
 
 ## For adding an item to the database
