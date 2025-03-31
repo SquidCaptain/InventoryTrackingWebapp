@@ -9,10 +9,10 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 ## --Database--
-db = SQLAlchemy(app)
-# try:
-#     with app.app_context():
-#         db.create_all()
-#         print("Database initialized successfully.")
-# except Exception as e:
-#     print(f"Database connection failed: {e}")
+try:
+    db = SQLAlchemy(app)
+    with app.app_context():
+        db.create_all()
+        print("Database initialized successfully.")
+except Exception as e:
+    print(f"Database connection failed: {e}")
