@@ -24,7 +24,7 @@ def home_page():
             return redirect(url_for('edit', editID=editID))
         except:
             print("Something went wrong")
-    items = Item.query.all()
+    items = []#Item.query.all()
     return render_template("home.html", items=items, form=form)
 
 ## For adding an item to the database
