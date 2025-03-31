@@ -4,7 +4,7 @@ This is an inventory tracking webapp
 Notes:
 Using flask framework to create a python webapp
 
-Test this: https://inventory-tracking-webapp.vercel.app/
+Try it out [here](https://inventory-tracking-webapp.vercel.app/)
 
 Manual(to run this locally):
 
