@@ -31,7 +31,7 @@ def home_page():
         with app.app_context():
             testQuery = Item.query.all()
     except Exception as e:
-        items = f"Database connection failed: {e}"
+        items = [f"Database connection failed: {e}"]
     
     return render_template("home.html", items=items, form=form)
 
