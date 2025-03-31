@@ -27,8 +27,9 @@ def home_page():
             print("Something went wrong")
     
     items = ["Here"]
-    with app.app_context():
-        testQuery = Item.query.all()
+    try:
+        with app.app_context():
+            testQuery = Item.query.all()
     except Exception as e:
         items = f"Database connection failed: {e}"
     
