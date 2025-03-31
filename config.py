@@ -15,8 +15,13 @@ DBNAME = os.getenv("dbname")
 ## Flask (and extensions) config class
 class Config:
     DEBUG = False
-    SQLALCHEMY_POOLCLASS = NullPool
 
-    # Construct the SQLAlchemy connection string
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
+    POSTGRES_URL = os.getenv("POSTGRES_URL")
+
+    # Construct the SQLAlchemy connection string Ex: f"postgresql+psycopg2://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}?sslmode=require"
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DBNAME}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'poolclass': NullPool,
+        'pool_pre_ping': True
+    }

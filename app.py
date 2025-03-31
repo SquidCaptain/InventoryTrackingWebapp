@@ -7,6 +7,10 @@ from config import Config
 ## --Flask App--
 app = Flask(__name__)
 app.config.from_object(Config)
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_pre_ping": True
+    "poolclass": NullPool
+}
 
 ## --Database--
 try:

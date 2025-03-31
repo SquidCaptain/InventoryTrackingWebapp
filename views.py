@@ -30,7 +30,7 @@ def home_page():
     try:
         items = Item.query.all()
     except Exception as e:
-        items = [f"Database connection failed: {e}"]
+        items = [f"Database connection failed: {e}", Config.POSTGRES_URL]
     
     return render_template("home.html", items=items, form=form)
 
